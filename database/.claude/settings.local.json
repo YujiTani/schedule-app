@@ -8,7 +8,8 @@
       "Bash(terminal-notifier:*)",
       "Bash(docker logs:*)",
       "Bash(docker exec:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }
