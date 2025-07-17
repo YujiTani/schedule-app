@@ -2,7 +2,17 @@ import { ApiResponse } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
+/**
+ * API エラークラス
+ */
 export class ApiError extends Error {
+  /**
+   * API エラーを作成
+   * 
+   * @param message - エラーメッセージ
+   * @param status - HTTPステータスコード
+   * @param requestId - リクエストID（デフォルト値: undefined）
+   */
   constructor(
     message: string,
     public status: number,
@@ -13,13 +23,28 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * API クライアントクラス
+ */
 export class ApiClient {
   private baseURL: string;
 
+  /**
+   * API クライアントを作成
+   * 
+   * @param baseURL - ベースURL（デフォルト値: API_BASE_URL）
+   */
   constructor(baseURL: string = API_BASE_URL) {
     this.baseURL = baseURL;
   }
 
+  /**
+   * HTTP リクエストを送信
+   * 
+   * @param endpoint - エンドポイント
+   * @param options - リクエストオプション（デフォルト値: {}）
+   * @returns APIレスポンス
+   */
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -58,10 +83,23 @@ export class ApiClient {
     }
   }
 
+  /**
+   * GET リクエストを送信
+   * 
+   * @param endpoint - エンドポイント
+   * @returns APIレスポンス
+   */
   async get<T>(endpoint: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'GET' });
   }
 
+  /**
+   * POST リクエストを送信
+   * 
+   * @param endpoint - エンドポイント
+   * @param data - 送信データ（デフォルト値: undefined）
+   * @returns APIレスポンス
+   */
   async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'POST',
@@ -69,6 +107,13 @@ export class ApiClient {
     });
   }
 
+  /**
+   * PUT リクエストを送信
+   * 
+   * @param endpoint - エンドポイント
+   * @param data - 送信データ（デフォルト値: undefined）
+   * @returns APIレスポンス
+   */
   async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'PUT',
@@ -76,6 +121,12 @@ export class ApiClient {
     });
   }
 
+  /**
+   * DELETE リクエストを送信
+   * 
+   * @param endpoint - エンドポイント
+   * @returns APIレスポンス
+   */
   async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'DELETE' });
   }

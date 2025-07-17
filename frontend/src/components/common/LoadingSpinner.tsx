@@ -5,6 +5,13 @@ interface LoadingSpinnerProps {
   className?: string;
 }
 
+/**
+ * ローディングスピナーコンポーネント
+ * 
+ * @param props - ローディングスピナーのプロパティ
+ * @param props.size - スピナーのサイズ（デフォルト値: 'md'）
+ * @param props.className - 追加のCSSクラス（デフォルト値: ''）
+ */
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
   size = 'md', 
   className = '' 

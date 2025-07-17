@@ -6,6 +6,14 @@ interface ErrorMessageProps {
   onRetry?: () => void;
 }
 
+/**
+ * エラーメッセージ表示コンポーネント
+ * 
+ * @param props - エラーメッセージのプロパティ
+ * @param props.message - 表示するエラーメッセージ
+ * @param props.className - 追加のCSSクラス（デフォルト値: ''）
+ * @param props.onRetry - 再試行ボタンクリック時のハンドラー（デフォルト値: undefined）
+ */
 export const ErrorMessage: React.FC<ErrorMessageProps> = ({ 
   message, 
   className = '',

@@ -11,6 +11,20 @@ interface ButtonProps {
   className?: string;
 }
 
+/**
+ * 汎用ボタンコンポーネント
+ * 
+ * @param props - ボタンのプロパティ
+ * @param props.children - ボタンの内容
+ * @param props.onClick - クリック時のハンドラー
+ * @param props.type - ボタンのタイプ（button, submit, reset）
+ * @param props.variant - ボタンのスタイル（primary, secondary, outline, danger）
+ * @param props.size - ボタンのサイズ（sm, md, lg）
+ * @param props.disabled - ボタンの無効化状態
+ * @param props.loading - ローディング状態
+ * @param props.className - 追加のCSSクラス
+ * @returns ボタンコンポーネント
+ */
 export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
