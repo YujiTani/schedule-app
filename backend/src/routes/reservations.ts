@@ -5,6 +5,10 @@ import { eq, and, isNull, desc } from 'drizzle-orm';
 import { CreateReservationRequest, ReservationResponse } from '../types/index.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 import { v4 as uuidv4 } from 'uuid';
+import { validateBody, validateParam } from '../middleware/validation.js';
+import { createReservationSchema, updateReservationSchema } from '../validators/reservation.js';
+import { logger } from '../utils/logger.js';
+import { z } from 'zod';
 
 const app = new Hono();
 
@@ -28,13 +32,14 @@ app.get('/', async (c) => {
 
     return sendSuccess(c, result, '予約一覧を取得しました');
   } catch (error) {
-    console.error('予約一覧取得エラー:', error);
+    const requestId = c.get('requestId');
+    logger.error('予約一覧取得エラー', { error: error instanceof Error ? error.message : error }, requestId);
     return sendError(c, '予約一覧の取得に失敗しました', 500);
   }
 });
 
 // 予約詳細取得
-app.get('/:uuid', async (c) => {
+app.get('/:uuid', validateParam('uuid', z.string().uuid('有効なUUIDを指定してください')), async (c) => {
   try {
     const uuid = c.req.param('uuid');
     
@@ -64,20 +69,16 @@ app.get('/:uuid', async (c) => {
 
     return sendSuccess(c, result[0], '予約詳細を取得しました');
   } catch (error) {
-    console.error('予約詳細取得エラー:', error);
+    const requestId = c.get('requestId');
+    logger.error('予約詳細取得エラー', { error: error instanceof Error ? error.message : error }, requestId);
     return sendError(c, '予約詳細の取得に失敗しました', 500);
   }
 });
 
 // 予約作成
-app.post('/', async (c) => {
+app.post('/', validateBody(createReservationSchema), async (c) => {
   try {
-    const body = await c.req.json() as CreateReservationRequest;
-    
-    // バリデーション
-    if (!body.email || !body.name || !body.content || !body.reservationDate || !body.startTime || !body.endTime) {
-      return sendError(c, '必須項目が不足しています', 400);
-    }
+    const body = c.get('validatedData') as CreateReservationRequest;
 
     // 予約作成
     const newReservation = await db
@@ -110,16 +111,20 @@ app.post('/', async (c) => {
 
     return sendSuccess(c, newReservation[0], '予約を作成しました', 201);
   } catch (error) {
-    console.error('予約作成エラー:', error);
+    const requestId = c.get('requestId');
+    logger.error('予約作成エラー', { error: error instanceof Error ? error.message : error }, requestId);
     return sendError(c, '予約の作成に失敗しました', 500);
   }
 });
 
 // 予約更新
-app.put('/:uuid', async (c) => {
+app.put('/:uuid', 
+  validateParam('uuid', z.string().uuid('有効なUUIDを指定してください')), 
+  validateBody(updateReservationSchema), 
+  async (c) => {
   try {
     const uuid = c.req.param('uuid');
-    const body = await c.req.json() as Partial<CreateReservationRequest>;
+    const body = c.get('validatedData') as Partial<CreateReservationRequest>;
     
     // 予約の存在確認
     const existingReservation = await db
@@ -158,13 +163,14 @@ app.put('/:uuid', async (c) => {
 
     return sendSuccess(c, updatedReservation[0], '予約を更新しました');
   } catch (error) {
-    console.error('予約更新エラー:', error);
+    const requestId = c.get('requestId');
+    logger.error('予約更新エラー', { error: error instanceof Error ? error.message : error }, requestId);
     return sendError(c, '予約の更新に失敗しました', 500);
   }
 });
 
 // 予約削除（論理削除）
-app.delete('/:uuid', async (c) => {
+app.delete('/:uuid', validateParam('uuid', z.string().uuid('有効なUUIDを指定してください')), async (c) => {
   try {
     const uuid = c.req.param('uuid');
     
@@ -202,7 +208,8 @@ app.delete('/:uuid', async (c) => {
 
     return sendSuccess(c, null, '予約をキャンセルしました');
   } catch (error) {
-    console.error('予約削除エラー:', error);
+    const requestId = c.get('requestId');
+    logger.error('予約削除エラー', { error: error instanceof Error ? error.message : error }, requestId);
     return sendError(c, '予約のキャンセルに失敗しました', 500);
   }
 });

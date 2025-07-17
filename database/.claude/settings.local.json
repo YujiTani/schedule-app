@@ -9,7 +9,9 @@
       "Bash(docker logs:*)",
       "Bash(docker exec:*)",
       "Bash(git add:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr view:*)"
     ],
     "deny": []
   }

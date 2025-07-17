@@ -1,3 +1,6 @@
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+--> statement-breakpoint
 CREATE TABLE "admin_settings" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"setting_key" text NOT NULL,

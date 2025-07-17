@@ -7,6 +7,11 @@ export interface UseApiState<T> {
   error: string | null;
 }
 
+/**
+ * API呼び出しを管理するカスタムフック
+ * @param apiCall - 実行するAPI関数
+ * @returns API状態とrefetch関数
+ */
 export function useApi<T>(
   apiCall: () => Promise<{ data?: T; error?: string }>
 ): UseApiState<T> & { refetch: () => Promise<void> } {
