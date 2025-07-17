@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:zenn.dev)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(npx create-vite:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "WebFetch(domain:tailwindcss.com)",
+      "Bash(npm init:*)",
+      "Bash(mv:*)"
+    ],
+    "deny": []
+  }
+}
