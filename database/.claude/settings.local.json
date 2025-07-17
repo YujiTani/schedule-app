@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(rm:*)",
+      "Bash(docker-compose:*)",
+      "Bash(curl:*)",
+      "Bash(terminal-notifier:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker exec:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}

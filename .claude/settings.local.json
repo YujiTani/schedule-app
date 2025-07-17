@@ -9,7 +9,17 @@
       "Bash(npx tailwindcss:*)",
       "WebFetch(domain:tailwindcss.com)",
       "Bash(npm init:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(make:*)",
+      "Bash(curl:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker restart:*)",
+      "Bash(screencapture:*)",
+      "Bash(open http://localhost:3000)",
+      "Bash(osascript:*)",
+      "Bash(open:*)",
+      "mcp__playwright__browser_navigate",
+      "Bash(docker compose:*)"
     ],
     "deny": []
   }
