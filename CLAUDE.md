@@ -104,21 +104,80 @@ schedule-app/
 - **TailwindCSS使用時**: 必ず `/gemini-search` で最新情報を取得する
 - **技術的な不明点**: まず `/gemini-search` で調査してから実装する
 
-### 14. データベース設計ルール
+### 14. 通知・進捗報告ルール
+- **タスク完了時**: 各タスク完了時に `terminal-notifier` でデスクトップ通知を送信
+- **許可が必要な場合**: ツール使用で許可が必要な場合も通知で報告
+- **進捗の可視化**: 小さな単位での進捗報告を徹底
+- **通知コマンド**: `terminal-notifier -message "メッセージ" -title "タイトル"`
 
-#### 14.1 識別子
+### 15. Git・GitHub管理ルール
+- **作業単位**: 各チェックボックス（タスク）ごとに作業用ブランチを作成
+- **ブランチ命名**: `feature/task-description` (例: `feature/api-client-library`)
+- **コミット頻度**: 小さな単位でコミットを作成
+- **Pull Request**: チェックボックス完了時にPRを作成
+- **マージ**: レビュー後にmasterブランチにマージ
+- **必須作業**: 作業開始前にブランチ作成、作業完了後にPR作成
+
+### 16. フロントエンドJSDoc記述ルール
+- **対象**: React関数コンポーネント、カスタムフック、その他のフロントエンド関数
+- **記述言語**: 日本語での説明を基本とする
+- **必須項目**: 関数/コンポーネントの概要・目的、@paramでの詳細説明
+- **デフォルト値**: 存在する場合は@paramに記載する
+- **返り値**: JSX以外を返す場合のみ@returnsを記載
+- **不要項目**: @example、JSX返り値の@returns、パフォーマンス/アクセシビリティ注意事項
+
+#### 16.1 React関数コンポーネントのテンプレート
+```typescript
+/**
+ * [コンポーネントの概要・目的]
+ * 
+ * @param props - [コンポーネントのプロパティ]
+ * @param props.children - [propsの説明]
+ * @param props.onClick - [propsの説明（デフォルト値: undefined）]
+ * @param props.variant - [propsの説明（デフォルト値: 'primary'）]
+ */
+export const Component: React.FC<ComponentProps> = ({ ... }) => {
+```
+
+#### 16.2 カスタムフックのテンプレート
+```typescript
+/**
+ * [フックの概要・目的]
+ * 
+ * @param param1 - [パラメータの説明]
+ * @param param2 - [パラメータの説明（デフォルト値: false）]
+ * @returns [返り値の説明]
+ */
+export function useCustomHook(param1: string, param2: boolean = false) {
+```
+
+#### 16.3 ユーティリティ関数のテンプレート
+```typescript
+/**
+ * [関数の概要・目的]
+ * 
+ * @param param1 - [パラメータの説明]
+ * @param param2 - [パラメータの説明（デフォルト値: null）]
+ * @returns [返り値の説明]
+ */
+export function utilityFunction(param1: string, param2: number | null = null): ReturnType {
+```
+
+### 17. データベース設計ルール
+
+#### 17.1 識別子
 - **主キー**: UUID（`uuid-ossp`拡張機能使用）
 - **補助ID**: SERIAL（auto increment）をレコードに付与
 - **API**: UUIDを使用してアクセス
 - **外部キー**: UUIDを使用
 
-#### 14.2 データ型
+#### 17.2 データ型
 - **時間管理**: UNIX時間（BIGINT）
 - **文字列**: TEXT統一
 - **金額**: INTEGER（円単位）
 - **論理削除**: `deleted_at BIGINT`（UNIX時間、NULL=未削除）
 
-#### 14.3 命名規則
+#### 17.3 命名規則
 - **テーブル名**: 複数形（snake_case）
 - **制約名パターン**:
   - 主キー: `pk_テーブル名`
@@ -127,7 +186,7 @@ schedule-app/
   - チェック制約: `ck_テーブル名_カラム名`
   - インデックス: `idx_テーブル名_カラム名`
 
-#### 14.4 履歴管理
+#### 17.4 履歴管理
 - **論理削除**: `deleted_at`カラムで管理
 - **変更履歴**: 履歴テーブルで変更内容を記録
 - **作成・更新日時**: `created_at`, `updated_at`（UNIX時間）

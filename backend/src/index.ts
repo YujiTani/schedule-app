@@ -2,17 +2,20 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { requestIdMiddleware } from "./middleware/requestId.js";
+import apiRoutes from "./routes/index.js";
 
 const app = new Hono();
 
 // TODO: 本番環境では適切なドメインを指定する
 app.use("*", cors({
   origin: "*",
-  allowHeaders: ["Content-Type", "Authorization"],
+  allowHeaders: ["Content-Type", "Authorization", "X-Request-ID"],
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
 app.use("*", logger());
+app.use("*", requestIdMiddleware);
 
 // ヘルスチェック
 app.get("/health", (c) => {
@@ -20,7 +23,7 @@ app.get("/health", (c) => {
 });
 
 // API routes
-app.route("/api", app);
+app.route("/api", apiRoutes);
 
 const port = Number(process.env.PORT) || 8000;
 
